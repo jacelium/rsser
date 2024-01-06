@@ -2,37 +2,83 @@
 <html>
 <head>
 <style>
-  .container {
+  .main {
+    border: 1px solid black;
+    border-radius: 3px;
     display: flex;
     flex-direction: column;
+    flex-basis: 100%;
+    flex: 1 0;
+  }
+  .margin {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 0.1;
   }
   .column {
     display: flex;
+    flex-basis: 100%;
+    flex: 1;
     flex-direction: column;
-    padding: 0.2rem;
+    margin: 0.2rem;
+  }
+  .full {
+    flex: 0 0;
+  }
+  .double {
+    flex: 2;
+  }
+  .quarter {
+    flex: 0.25;
   }
   .row {
     display: flex;
+    width: 100%;
+    flex: 1;
     flex-direction: row;
-    padding: 0.2rem;
+  }
+  .right {
+    text-align: right;
+  }
+  .failed {
+    background-color: lightpink;
+    border-bottom: 3px solid red;
+    margin-bottom: 1rem;
+  }
+  .succeeded {
+    background-color: lightgreen; 
+    border-bottom: 3px solid green;
+    margin-bottom: 1rem;
+  }
+  .bold {
+    font-weight: bolder;
   }
 </style>
 </head>
  <body>
-  {% if post %} <p>{% if success %}Posted{% else %}Failed{% endif %}: {{post}} {% endif %}
-  <p>
-   <form method='post' style="max-width: 60%;">
-    <div class="container">
-    <div class="row">
-      <div class="column" style="text-align: right">Password</div>
+  <div class="row">
+   <div class="margin"></div>
+   <div class="main">
+    {% if post %}
+     <div class="row {% if success %}succeeded{% else %}failed{% endif %}">
+      <div class="column quarter right bold">Post {% if success %}Succeeded{% else %}Failed{% endif %}</div>
+      <div class="column double">{{post}}</div>
+     </div>
+    {% endif %}
+    <form method="post">
+     <div class="row">
+      <div class="column quarter right">Password</div>
       <div class="column"><input type="password" name="password"></div>
       <div class="column"><input type="submit" value="Post!"></div>
-    </div>
-    <div class="row">
-      <div class="column" style="text-align: right">Post</div><div class="column"><textarea name="content" cols=50 rows=10></textarea></div>
-    </div>
-    </div>
-   </form>
-  </p>
+     </div>
+     <div class="row">
+      <div class="column quarter right">Post</div>
+      <div class="column double"><textarea name="content" cols=50 rows=10></textarea></div>
+     </div>
+    </form>
+   </div>
+   <div class="margin"></div>
+  </div>
  </body>
 </html>
