@@ -1,0 +1,17 @@
+<DOCTYPE html>
+<html>
+<head>
+</head>
+ <body>
+  {% if posts|length == 0 %} <p>No posts.</p>
+  {% else %}
+    <div>
+    {% for post in posts %}
+      <p>{{ post["time"] }}</p>
+      <p>{{ post["body"] }}</p>
+      <hr />
+    {% endfor %}
+    </div>
+  {% endif %}
+ </body>
+</html>

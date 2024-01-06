@@ -1,0 +1,38 @@
+<DOCTYPE html>
+<html>
+<head>
+<style>
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  .column {
+    display: flex;
+    flex-direction: column;
+    padding: 0.2rem;
+  }
+  .row {
+    display: flex;
+    flex-direction: row;
+    padding: 0.2rem;
+  }
+</style>
+</head>
+ <body>
+  {% if post %} <p>{% if success %}Posted{% else %}Failed{% endif %}: {{post}} {% endif %}
+  <p>
+   <form method='post' style="max-width: 60%;">
+    <div class="container">
+    <div class="row">
+      <div class="column" style="text-align: right">Password</div>
+      <div class="column"><input type="password" name="password"></div>
+      <div class="column"><input type="submit" value="Post!"></div>
+    </div>
+    <div class="row">
+      <div class="column" style="text-align: right">Post</div><div class="column"><textarea name="content" cols=50 rows=10></textarea></div>
+    </div>
+    </div>
+   </form>
+  </p>
+ </body>
+</html>
