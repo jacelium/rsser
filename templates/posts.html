@@ -1,17 +1,77 @@
 <DOCTYPE html>
 <html>
 <head>
+<style>
+  .main {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1 0;
+  }
+  .margin {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 0.1;
+  }
+  .column {
+    display: flex;
+    flex-basis: 100%;
+    flex: 1;
+    flex-direction: column;
+    margin: 0.2rem;
+  }
+  .full {
+    flex: 0 0;
+  }
+  .double {
+    flex: 2;
+  }
+  .date {
+    flex: 0.15;
+  }
+  .row {
+    display: flex;
+    width: 100%;
+    flex: 1;
+    flex-direction: row;
+  }
+  .right {
+    text-align: right;
+  }
+  .failed {
+    background-color: lightpink;
+    border-bottom: 3px solid red;
+    margin-bottom: 1rem;
+  }
+  .post {
+    border-bottom: 3px solid black;
+    margin-bottom: 0.5rem;
+    border-left: 1px solid black;
+    border-right: 3px solid black;
+    border-top: 1px solid black;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+</style>
 </head>
  <body>
-  {% if posts|length == 0 %} <p>No posts.</p>
-  {% else %}
-    <div>
-    {% for post in posts %}
-      <p>{{ post["time"] }}</p>
-      <p>{{ post["body"] }}</p>
-      <hr />
-    {% endfor %}
-    </div>
-  {% endif %}
+  <div class="row">
+   <div class="margin"></div>
+    <div class="main">
+     {% if posts|length == 0 %} <div class="row failed">No posts.</div>
+     {% else %}
+      {% if incorrect_timezone is not none %} <div class="row failed">Unknown timezone: {{ incorrect_timezone }}. Using default: {{ timezone }}</div>{% endif %}
+       {% for post in posts %}
+        <div class="row post">
+         <div class="column date">{{ post["formatted_time"] }}</div>
+         <div class="column">{{ post["body"] }}</div>
+        </div>
+      {% endfor %}
+      {% endif %}
+     </div>
+    <div class="margin"></div>
+   </div>
+  </div>
  </body>
 </html>

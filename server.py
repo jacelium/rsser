@@ -3,6 +3,8 @@ from markupsafe import escape
 from datetime import datetime, timezone
 import json
 import hashlib
+from dateutil import parser
+import pytz
 
 # What host are we working with?
 def getHost():
@@ -12,7 +14,8 @@ def getHost():
 # {
 #    "targetHostname": {
 #      "value": "valueOrHash",
-#      "type": "clear" # 'clear' indicates cleartext. Anything else takes the sha256 digest.
+#      "type": "clear", # 'clear' indicates cleartext. Anything else takes the sha256 digest.
+#      "timezone": "America/Los_Angeles" # Preferred timezone to display in. Overridable with the `timezone` query param.
 #    }
 #    ...
 # }
@@ -46,11 +49,26 @@ app = Flask(__name__)
 
 @app.route("/rss", methods=['GET'])
 def rss():
-   return Response(render_template('rss.xml', posts=get_lines()), mimetype='application/rss+xml')
+   return Response(render_template('rss.html', posts=get_lines()), mimetype='application/rss+xml')
+
+def format_time(datestring, timezone):
+   date = parser.parse(datestring)
+   target_tz = pytz.timezone(timezone)
+   return date.astimezone(target_tz).strftime('%Y-%m-%d %H:%M:%S %z')
 
 @app.route("/text", methods=['GET'])
 def text():
-   return render_template('posts.html', posts=list(reversed(get_lines())))
+   hostname = getHost()
+
+   incorrect_timezone = None
+   timezone = request.args.get('timezone')
+   if timezone not in pytz.all_timezones:
+      incorrect_timezone = timezone
+      timezone = passwords[hostname].get('timezone', 'UTC')
+
+   posts = list(reversed(get_lines()))
+   posts = list(map(lambda x: {'body': x['body'], 'time': x['time'], 'formatted_time': format_time(x['time'], timezone)}, posts))
+   return render_template('posts.html', posts=posts, timezone=timezone, incorrect_timezone=incorrect_timezone)
 
 @app.route('/post', methods=['GET', 'POST'])
 def receive_post():
